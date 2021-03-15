@@ -25,42 +25,41 @@ exports.registerNewUser = (req, res) => {
     })
 }
 
+exports.loginUser = (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    User.findByCredentials(email, password).then((user) => {
+        console.log(user)
+        if (!user) {
+            res.status(401).json({
+                error: "Login failed! Check authentication credentials"
+            })
+        } else {
+            user.generateAuthToken().then((token) => {
+                res.status(201).json({
+                    user, token
+                })
+            })
+        }
+    }).catch((err) => {
+        res.status(400).json({err: err});
+    })
+}
 
-// exports.registerNewUser = async (req, res) => {
+// exports.loginUser = async (req, res) => {
 //     try {
-//         // console.log(User);
-//         // if (User.length >= 1) {
-//         //     return res.status(409).json({
-//         //         message: "email already in use"
-//         //     });
-//         // }
-//         const user = new User({
-//             name: req.body.name,
-//             email: req.body.email,
-//             password: req.body.password,
-//             favClasses: req.body.favClasses
-//         });
-//         let data = await user.save();
-//         const token = await user.generateAuthToken(); // here it is calling the method that we created in the model
-//         res.status(201).json({data, token});
+//         const email = req.body.email;
+//         const password = req.body.password;
+//         const user = await User.findByCredentials(email, password);
+//         if (!user) {
+//             return res.status(401).json({error: "Login failed! Check authentication credentials"});
+//         }
+//         const token = await user.generateAuthToken();
+//         res.status(201).json({user, token});
 //     } catch (err) {
-//         res.status(400).json({err: err.message});
+//         res.status(400).json({err: err});
 //     }
 // };
-exports.loginUser = async (req, res) => {
-    try {
-        const email = req.body.email;
-        const password = req.body.password;
-        const user = await User.findByCredentials(email, password);
-        if (!user) {
-            return res.status(401).json({error: "Login failed! Check authentication credentials"});
-        }
-        const token = await user.generateAuthToken();
-        res.status(201).json({user, token});
-    } catch (err) {
-        res.status(400).json({err: err});
-    }
-};
 exports.addToFavClass = async (req, res) => {
     // try {
     //     const id = req.body.id;
