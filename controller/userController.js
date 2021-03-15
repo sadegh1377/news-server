@@ -30,43 +30,33 @@ exports.loginUser = (req, res) => {
     const password = req.body.password;
     User.findByCredentials(email, password).then((user) => {
             console.log(user)
-        user.generateAuthToken().then((token) => {
-            res.status(201).json({
-                user, token
+            user.generateAuthToken().then((token) => {
+                res.status(201).json({
+                    user, token
+                })
             })
-        })
         }
     ).catch((err) => {
         res.status(401).json({
-            error: "Login failed! Check authentication credentials"
+            message: "Email or Password is incorrect"
         })
     })
 }
-
-exports.addToFavClass = async (req, res) => {
-    // try {
-    //     const id = req.body.id;
-    //     User.findById(id, (err, user) => {
-    //         if (!user) {
-    //             req.flush("error", "No account found");
-    //             return res.redirect('/');
-    //         }
-    //         user.favClasses = req.body.favClasses;
-    //         console.log(user)
-    //         let data = user.save();
-    //         res.send(user)
-    //     })
-    //
-    // } catch (err) {
-    //     res.status(400).json({err: err.message});
-    // }
-    const id = req.body.id;
-    console.log(req.body)
-    // let doc = await User.updateOne(id, {favClasses: req.body.favClasses})
-    // const token = await .generateAuthToken();
-    // await doc.save()
-
-    // res.send(doc, token)
+exports.addToFavClass = (req, res) => {
+    const email = req.body.email;
+    const favClasses = req.body.favClasses;
+    User.findOneAndUpdate({email: email}, {$set: {favClasses: favClasses}},
+        {new: true}, (err, doc) => {
+            if (err) {
+                console.log("Something wrong when updating data!");
+            } else {
+                doc.generateAuthToken().then((token) => {
+                    res.status(201).json({
+                        token
+                    })
+                })
+            }
+        })
 }
 
 exports.getUserDetails = async (req, res) => {
