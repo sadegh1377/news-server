@@ -29,37 +29,20 @@ exports.loginUser = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     User.findByCredentials(email, password).then((user) => {
-        console.log(user)
-        if (!user) {
-            res.status(401).json({
-                error: "Login failed! Check authentication credentials"
+            console.log(user)
+        user.generateAuthToken().then((token) => {
+            res.status(201).json({
+                user, token
             })
-        } else {
-            user.generateAuthToken().then((token) => {
-                res.status(201).json({
-                    user, token
-                })
-            })
+        })
         }
-    }).catch((err) => {
-        res.status(400).json({err: err});
+    ).catch((err) => {
+        res.status(401).json({
+            error: "Login failed! Check authentication credentials"
+        })
     })
 }
 
-// exports.loginUser = async (req, res) => {
-//     try {
-//         const email = req.body.email;
-//         const password = req.body.password;
-//         const user = await User.findByCredentials(email, password);
-//         if (!user) {
-//             return res.status(401).json({error: "Login failed! Check authentication credentials"});
-//         }
-//         const token = await user.generateAuthToken();
-//         res.status(201).json({user, token});
-//     } catch (err) {
-//         res.status(400).json({err: err});
-//     }
-// };
 exports.addToFavClass = async (req, res) => {
     // try {
     //     const id = req.body.id;
