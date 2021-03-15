@@ -29,7 +29,6 @@ exports.loginUser = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     User.findByCredentials(email, password).then((user) => {
-            console.log(user)
             user.generateAuthToken().then((token) => {
                 res.status(201).json({
                     user, token
