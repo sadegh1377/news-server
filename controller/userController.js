@@ -29,13 +29,12 @@ exports.loginUser = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     User.findByCredentials(email, password).then((user) => {
-            user.generateAuthToken().then((token) => {
-                res.status(201).json({
-                    user, token
-                })
+        user.generateAuthToken().then((token) => {
+            res.status(201).json({
+                user, token
             })
-        }
-    ).catch((err) => {
+        })
+    }).catch((err) => {
         res.status(401).json({
             message: "Email or Password is incorrect"
         })
@@ -60,4 +59,8 @@ exports.addToFavClass = (req, res) => {
 
 exports.getUserDetails = async (req, res) => {
     await res.json(req.userData);
+}
+
+exports.getSadegh = async (req, res) => {
+    await res.json({name: "Sadegh", lastName: "Hadipour"});
 }

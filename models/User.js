@@ -4,15 +4,15 @@ const jwt = require("jsonwebtoken");
 const userSchema = mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Please Include your name"]
+        required: [true, "Please Include Your Name"]
     },
     email: {
         type: String,
-        required: [true, "Please Include your email"]
+        required: [true, "Please Include Your Email"]
     },
     password: {
         type: String,
-        required: [true, "Please Include your password"]
+        required: [true, "Please Include Your Password"]
     },
     favClasses: [],
     tokens: [
@@ -38,8 +38,9 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
     const token = jwt.sign({_id: user._id, name: user.name, email: user.email, favClasses: user.favClasses},
-        "secret");
+        "secret" );
     user.tokens = user.tokens.concat({token});
+    console.log(user.tokens)
     await user.save();
     return token;
 };
