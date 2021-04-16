@@ -48,6 +48,7 @@ exports.addToFavClass = (req, res) => {
             if (err) {
                 console.log("Something wrong when updating data!");
             } else {
+                console.log(doc)
                 doc.generateAuthToken().then((token) => {
                     res.status(201).json({
                         token
@@ -61,6 +62,6 @@ exports.getUserDetails = async (req, res) => {
     await res.json(req.userData);
 }
 
-exports.getSadegh = async (req, res) => {
-    await res.json({name: "Sadegh", lastName: "Hadipour"});
-}
+// exports.getSadegh = async (req, res) => {
+//     await res.json({name: "Sadegh", lastName: "Hadipour"});
+// }

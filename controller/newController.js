@@ -26,7 +26,7 @@ exports.addNews = (req, res) => {
 exports.favNews = async (req, res) => {
     const result = []
     const favClasses = req.query.favClasses
-    console.log(favClasses)
+    // console.log(favClasses)
     if (favClasses) {
         for (const fav of favClasses) {
             result.push(await News.find({newsClass: fav}))
@@ -34,6 +34,26 @@ exports.favNews = async (req, res) => {
     }
     // console.log(result)
     res.send(result)
+}
+
+exports.increaseViewCounter = (req, res) => {
+    const id = req.body._id;
+    console.log(id)
+    News.findByIdAndUpdate({_id: id}, {$inc: {viewCounter: 1}},
+        {new: true}, (err, doc) => {
+            if (err) {
+                console.log("Something wrong when updating data!");
+            } else {
+                res.send(doc)
+            }
+        })
+}
+
+exports.fullNews = (req, res) => {
+    const id = req.query.id
+    News.findById(id).then((result) => {
+        res.send(result);
+    })
 }
 
 exports.allNews = (req, res) => {
