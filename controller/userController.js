@@ -1,17 +1,19 @@
 const User = require("../models/User.js");
+const bcrypt = require("bcrypt");
 
 exports.registerNewUser = (req, res) => {
     const user = new User({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        favClasses: req.body.favClasses
+        favClasses: req.body.favClasses,
+        isAdmin: false
     })
 
     User.findOne({email: user.email}).then((email) => {
         if (email) {
             res.status(409).json({
-                message: "Email already in use"
+                message: "ایمیل انتخابی در اختیار کاربر دیگری است"
             });
         } else {
             user.save().then((data) => {
@@ -36,7 +38,7 @@ exports.loginUser = (req, res) => {
         })
     }).catch((err) => {
         res.status(401).json({
-            message: "Email or Password is incorrect"
+            message: "ایمیل یا رمزعبور اشتباه است"
         })
     })
 }
@@ -53,6 +55,42 @@ exports.addToFavClass = (req, res) => {
                     res.status(201).json({
                         token
                     })
+                })
+            }
+        })
+}
+
+exports.changeProfile = async (req, res) => {
+    const newName = req.body.newName;
+    const newEmail = req.body.newEmail;
+    const oldEmail = req.body.oldEmail;
+    let password = req.body.password
+    password = await bcrypt.hash(password, 8);
+
+    User.findOne({email: newEmail})
+        .then((email) => {
+            if (email) {
+                res.status(409).json({
+                    message: "ایمیل انتخابی در اختیار کابر دیگری است"
+                });
+            } else {
+                User.findOneAndUpdate({email: oldEmail}, {
+                    $set: {
+                        name: newName,
+                        email: newEmail,
+                        password: password
+                    }
+                }, {new: true}, (err, doc) => {
+                    if (err) {
+                        console.log("Something wrong when updating data!");
+                    } else {
+                        console.log(doc)
+                        doc.generateAuthToken().then((token) => {
+                            res.status(201).json({
+                                token
+                            })
+                        })
+                    }
                 })
             }
         })

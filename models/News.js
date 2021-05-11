@@ -15,7 +15,10 @@ const newsSchema = new Schema({
         required: true
     },
     viewCounter: Number,
-    author: String
+    author: String,
+    image: {
+        type: String
+    }
 }, {timestamps: true});
 
 
