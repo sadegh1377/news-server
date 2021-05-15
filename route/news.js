@@ -20,6 +20,7 @@ router.get("/all-news", newsController.allNews);
 router.get("/fav-news", newsController.favNews);
 router.put("/inc-view", newsController.increaseViewCounter);
 router.get("/full-news", newsController.fullNews);
+router.delete("/delete-news", newsController.deleteNews);
 // router.post("/image", upload.single('upload'), (req, res) => {
 //     res.send();
 // }, (error, req, res, next) => {

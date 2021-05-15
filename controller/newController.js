@@ -10,17 +10,36 @@ exports.addNews = (req, res) => {
     })
     News.findOne({newsTitle: news.newsTitle}).then((newsTitle) => {
         if (newsTitle) {
-            res.status(409).json({
-                message: "This news already exist"
+            res.status(409).send({
+                message: "در حال حاضر خبری با این عنوان وجود دارد"
             });
         } else {
             news.save().then((data) => {
-                res.status(201).send({message: "News saved successfully"})
+                res.status(201).send({message: "خبر با موفقیت ذخیره شد"})
             }).catch((err) => {
-                res.status(400).json({err: err.message})
+                res.status(400).send({message: "خبر ذخیره نشد"})
             })
         }
     })
+}
+exports.deleteNews = (req, res) => {
+    const id = req.body._id;
+
+    News.findByIdAndRemove(id, (err, doc) => {
+        if (err) {
+            res.status(400).json({
+                message: "عملیات حذف کردن با مشکل مواجه شد"
+            })
+        } else {
+            res.status(200).json({
+                doc: doc,
+                message: "خبر با موفقیت حذف شد"
+            })
+        }
+    }).catch((err) => {
+        console.log(err)
+    })
+
 }
 
 exports.favNews = async (req, res) => {
