@@ -22,6 +22,8 @@ exports.addNews = (req, res) => {
         }
     })
 }
+
+
 exports.deleteNews = (req, res) => {
     const id = req.body._id;
 
@@ -57,13 +59,65 @@ exports.favNews = async (req, res) => {
 
 exports.increaseViewCounter = (req, res) => {
     const id = req.body._id;
-    console.log(id)
     News.findByIdAndUpdate({_id: id}, {$inc: {viewCounter: 1}},
         {new: true}, (err, doc) => {
             if (err) {
                 console.log("Something wrong when updating data!");
             } else {
                 res.send(doc)
+            }
+        })
+}
+
+exports.addComment = (req, res) => {
+    const id = req.body._id;
+    const comments = req.body.comments
+    News.findByIdAndUpdate({_id: id}, {$set: {comments: comments}}, {new: true},
+        (err, doc) => {
+            if (err) {
+                console.log(err)
+            } else {
+                res.send(doc)
+            }
+        })
+}
+exports.deleteComment = (req, res) => {
+    let id = req.body._id
+    const text = req.body.text;
+    News.findById({_id: id}, (err, doc) => {
+        doc.comments.forEach((comment) => {
+            if (comment.text === text) {
+                let index = doc.comments.indexOf(text);
+                doc.comments.splice(index)
+                doc.save()
+                res.send(doc.comment)
+            }
+        })
+    }).catch(err => {
+        console.log(err)
+    })
+
+}
+exports.addReplies = (req, res) => {
+    let id = req.body._id
+    const text = req.body.text;
+    const replies = req.body.replies
+    News.findById({_id: id},
+        (err, doc) => {
+            if (err) {
+                console.log(err)
+            } else {
+                doc.comments.forEach((comment) => {
+                    // console.log(comment.text)
+                    // console.log(typeof text)
+                    if (comment.text === text) {
+                        comment.replies = replies
+                        console.log(comment.replies)
+                    }
+                })
+                doc.save()
+                res.send(doc)
+                // console.log(doc)
             }
         })
 }

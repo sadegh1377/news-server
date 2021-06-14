@@ -18,7 +18,21 @@ const newsSchema = new Schema({
     author: String,
     image: {
         type: String
-    }
+    },
+    comments: [{
+        name: String,
+        text: String,
+        editing: Boolean,
+        isReplyOn: Boolean,
+        date: Date,
+        replyText: String,
+        replies: [{
+            name: String,
+            text: String,
+            editing: Boolean,
+            date: Date
+        }]
+    }]
 }, {timestamps: true});
 
 

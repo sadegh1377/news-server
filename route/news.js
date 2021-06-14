@@ -18,9 +18,12 @@ const upload = multer({
 router.post("/add-news", auth, upload.single('upload'), newsController.addNews);
 router.get("/all-news", newsController.allNews);
 router.get("/fav-news", newsController.favNews);
-router.put("/inc-view", newsController.increaseViewCounter);
 router.get("/full-news", newsController.fullNews);
 router.delete("/delete-news", newsController.deleteNews);
+router.delete("/delete-comment", newsController.deleteComment);
+router.put("/inc-view", newsController.increaseViewCounter);
+router.put("/add-comment", newsController.addComment);
+router.put("/add-replies", newsController.addReplies);
 // router.post("/image", upload.single('upload'), (req, res) => {
 //     res.send();
 // }, (error, req, res, next) => {
