@@ -85,21 +85,23 @@ exports.deleteComment = (req, res) => {
     let id = req.body._id
     const text = req.body.text;
     News.findById({_id: id}, (err, doc) => {
-        doc.comments.forEach((comment) => {
-            if (comment.text === text) {
-                let index = doc.comments.indexOf(text);
-                doc.comments.splice(index)
-                doc.save()
-                res.send(doc.comment)
-            }
-        })
-    }).catch(err => {
-        console.log(err)
+        if (err) {
+            console.log(err)
+        } else {
+            doc.comments.forEach((comment, index) => {
+                if (comment.text === text) {
+                    doc.comments.splice(index, 1);
+                }
+            })
+            doc.save()
+            res.send(doc.comments)
+
+        }
     })
 
 }
 exports.addReplies = (req, res) => {
-    let id = req.body._id
+    const id = req.body._id;
     const text = req.body.text;
     const replies = req.body.replies
     News.findById({_id: id},
@@ -120,6 +122,31 @@ exports.addReplies = (req, res) => {
                 // console.log(doc)
             }
         })
+}
+
+exports.deleteReply = (req, res) => {
+    const id = req.body._id;
+    const commentText = req.body.commentText;
+    const replyText = req.body.replyText;
+    News.findById({_id: id}, (err, doc) => {
+        if (err) {
+            console.log(err)
+        } else {
+            doc.comments.forEach((comment, index) => {
+                if (comment.text === commentText) {
+                    // console.log("sadegh hadipour")
+                    doc.comments[index].replies.forEach((reply, replyIndex) => {
+                        if (reply.text === replyText) {
+                            doc.comments[index].replies.splice(replyIndex, 1);
+
+                        }
+                    })
+                }
+            })
+            doc.save();
+            res.send(doc.comments)
+        }
+    })
 }
 
 exports.fullNews = (req, res) => {
