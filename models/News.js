@@ -16,7 +16,7 @@ const newsSchema = new Schema({
     },
     viewCounter: Number,
     author: String,
-    image: {
+    imageUrl: {
         type: String
     },
     comments: [{
@@ -35,7 +35,14 @@ const newsSchema = new Schema({
     }]
 }, {timestamps: true});
 
+// newsSchema.virtual('imagePath').get(() => {
+//     if (this.image != null && this.imageType != null) {
+//         return `data:${this.imageType};charset=utf-8;base64,${
+//             this.image.toString('base64')}`
+//     }
+// })
 
 const News = mongoose.model('News', newsSchema);
+
 
 module.exports = News;

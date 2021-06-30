@@ -1,4 +1,5 @@
 const News = require("../models/News");
+// const imageMimeTypes = ['image/jpeg', 'image/png']
 
 exports.addNews = (req, res) => {
     const news = new News({
@@ -6,8 +7,10 @@ exports.addNews = (req, res) => {
         newsBody: req.body.newsBody,
         newsClass: req.body.newsClass,
         viewCounter: req.body.viewCounter,
-        author: req.body.author
+        author: req.body.author,
+        imageUrl: req.body.imageUrl
     })
+    // saveImage(news, req.body.image)
     News.findOne({newsTitle: news.newsTitle}).then((newsTitle) => {
         if (newsTitle) {
             res.status(409).send({
@@ -104,6 +107,9 @@ exports.addReplies = (req, res) => {
     const id = req.body._id;
     const text = req.body.text;
     const replies = req.body.replies
+    // console.log("id:  " + id)
+    // console.log("text:  " + text)
+    // console.log("replies:  " + replies)
     News.findById({_id: id},
         (err, doc) => {
             if (err) {
@@ -111,7 +117,6 @@ exports.addReplies = (req, res) => {
             } else {
                 doc.comments.forEach((comment) => {
                     // console.log(comment.text)
-                    // console.log(typeof text)
                     if (comment.text === text) {
                         comment.replies = replies
                         console.log(comment.replies)
@@ -163,3 +168,15 @@ exports.allNews = (req, res) => {
         console.log(err);
     })
 }
+
+// function saveImage(news, imageEncodes) {
+//     if (imageEncodes === null) {
+//         return
+//     }
+//     const image = JSON.parse(imageEncodes)
+//     if (image != null && imageMimeTypes.includes(image.type)) {
+//         news.image = new Buffer.from(image.data, 'base64');
+//         news.imageType = image.type
+//     }
+//
+// }
