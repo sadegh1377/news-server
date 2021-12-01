@@ -64,20 +64,22 @@ exports.changeProfile = async (req, res) => {
     const newName = req.body.newName;
     const newEmail = req.body.newEmail;
     const oldEmail = req.body.oldEmail;
+    const newImageUrl = req.body.newImageUrl;
     let password = req.body.password
     password = await bcrypt.hash(password, 8);
 
-    User.findOne({email: newEmail})
-        .then((email) => {
-            if (email) {
-                res.status(409).json({
-                    message: "ایمیل انتخابی در اختیار کابر دیگری است"
-                });
-            } else {
+    // User.findOne({email: newEmail})
+    //     .then((email) => {
+    //         if (email) {
+    //             res.status(409).json({
+    //                 message: "ایمیل انتخابی در اختیار کابر دیگری است"
+    //             });
+    //         } else {
                 User.findOneAndUpdate({email: oldEmail}, {
                     $set: {
                         name: newName,
                         email: newEmail,
+                        imageUrl: newImageUrl,
                         password: password
                     }
                 }, {new: true}, (err, doc) => {
@@ -92,8 +94,8 @@ exports.changeProfile = async (req, res) => {
                         })
                     }
                 })
-            }
-        })
+            // }
+        // })
 }
 
 exports.getUserDetails = async (req, res) => {

@@ -14,6 +14,9 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, "Please Include Your Password"]
     },
+    imageUrl: {
+        type: String
+    },
     favClasses: [],
     isAdmin: {
         type: Boolean,
@@ -42,7 +45,10 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
     const token = jwt.sign({
-            _id: user._id, name: user.name, email: user.email,
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            imageUrl: user.imageUrl,
             favClasses: user.favClasses,
             isAdmin: user.isAdmin
         },
