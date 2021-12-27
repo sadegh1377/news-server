@@ -26,6 +26,32 @@ exports.addNews = (req, res) => {
     })
 }
 
+exports.editNews = (req, res) => {
+    const newsId = req.body.newsId;
+    const newsTitle = req.body.newsTitle;
+    const newsBody = req.body.newsBody;
+    const newsClass = req.body.newsClass;
+    const viewCounter = req.body.viewCounter;
+    const author = req.body.author;
+    const imageUrl = req.body.imageUrl;
+
+    News.findByIdAndUpdate(newsId, {
+        $set: {
+            newsTitle: newsTitle,
+            newsBody: newsBody,
+            newsClass: newsClass,
+            viewCounter: viewCounter,
+            author: author,
+            imageUrl: imageUrl
+        }
+    }, {new: true}, (err, doc) => {
+        if(err){
+            res.status(400).send({message: "خبر ذخیره نشد"})
+        }else {
+            res.status(201).send({message: "خبر با موفقیت ویرایش شد"})
+        }
+    })
+}
 
 exports.deleteNews = (req, res) => {
     const id = req.body._id;

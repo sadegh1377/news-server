@@ -13,5 +13,6 @@ router.delete("/delete-reply", newsController.deleteReply)
 router.put("/inc-view", newsController.increaseViewCounter);
 router.put("/add-comment", newsController.addComment);
 router.put("/add-replies", newsController.addReplies);
+router.put("/edit-news", newsController.editNews);
 
 module.exports = router;
